@@ -1,5 +1,3 @@
-USE Wedding
-
 CREATE TABLE returns(
 	Item varchar(20),
 	[Desc] varchar(50)
@@ -21,3 +19,4 @@ VALUES
 ('Band', 'They sucked.'),
 ('Napkins', 'Name of bride incorrect.'),
 ('Food', 'All of the guests were sick.')
+
