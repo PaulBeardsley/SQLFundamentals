@@ -1,5 +1,3 @@
-USE PaulsDB
-
 CREATE TABLE suppliers(
 	SupplierID varchar(4),
 	SupplierName varchar(20)
@@ -23,5 +21,6 @@ VALUES
 (1001, 'S1', 2023),
 (1002, 'S2', 2024),
 (1003, 'S5', 2025)
+
 
 
