@@ -1,5 +1,6 @@
---CREATE DATABASE LanguageSchool
-
+CREATE DATABASE LanguageSchool
+GO
+	
 USE LanguageSchool
 GO
 
