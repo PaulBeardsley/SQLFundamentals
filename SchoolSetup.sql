@@ -31,7 +31,7 @@ VALUES
 ('Angela', 'Orosco', 'Teacher', 19000),
 ('Eddie', 'Dumbrowski', 'Teacher', 18000),
 ('Walter', 'Sullivan', 'Warden', 15000),
-('Simon', 'Jenkins', 'Accommodation Officer', 17000),
+('Simon', 'Jenkins', 'Accommodation Officer', 17000)
 GO
 
 INSERT INTO Cars(RegNo, Colour, Make, [Owner])
