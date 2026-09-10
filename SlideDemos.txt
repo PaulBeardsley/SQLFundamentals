@@ -1,0 +1,825 @@
+
+-- QATSQL Demonstration on slides
+
+--How to index a table for faster performance in queries.
+
+CREATE INDEX idx_pname
+ON Persons (LastName, FirstName);
+
+DROP INDEX table_name.index_name;
+
+----------------------------------------------Part 1 (Day 1 )
+
+------------------------------------------- Mod 02 Retrieving Data PPt
+Use Northwind
+
+--Slide 11
+
+SELECT 
+ProductID, 
+ProductName,	
+UnitsInStock, 
+UnitsOnOrder, 
+UnitsInStock + UnitsOnOrder
+FROM 
+Products
+
+-- Slide 12
+
+SELECT 
+FirstName, 
+LastName, 
+FirstName + ' ' + LastName as FullName 
+FROM 
+Employees
+
+SELECT 
+FirstName, 
+LastName, 
+concat(FirstName, ' ', LastName) as 
+FullName 
+FROM 
+Employees
+
+---------------------------------------------Mod 3 Fiiltering Rows
+--Slide 7
+
+SELECT 
+ProductID,  
+ProductName,  
+UnitsInStock,  
+UnitsOnOrder 
+FROM 
+Products 
+WHERE  
+Discontinued = 0
+
+--Slide 10
+
+SELECT 
+FirstName, 
+LastName, 
+City
+FROM
+Employees
+WHERE Country = 'UK'
+
+SELECT 
+ProductID, 
+ProductName,  
+UnitPrice
+FROM 
+Products
+WHERE  
+UnitPrice > 100
+
+--Slide 11
+
+SELECT 
+ProductID, 
+ProductName,  
+CategoryID, 
+UnitPrice
+FROM  
+Products
+WHERE 
+CategoryID = 7 OR CategoryID = 8 
+AND 
+UnitPrice > 30
+
+-- Slide 12
+
+SELECT 
+ProductID, 
+ProductName,  
+CategoryID, 
+UnitPrice
+FROM  
+Products
+WHERE (CategoryID = 7 OR CategoryID = 8)
+AND 
+UnitPrice > 30
+
+
+--Example 2
+
+SELECT 
+ProductID, 
+ProductName,  
+CategoryID, 
+UnitPrice
+FROM  
+Products
+where
+CategoryID IN (7, 8)
+AND 
+UnitPrice > 30
+
+-- Slide 13
+
+SELECT
+ProductID, 
+ProductName,
+UnitPrice
+FROM
+Products
+WHERE
+UnitPrice >= 35
+AND 
+UnitPrice <= 40
+
+SELECT
+ProductID, 
+ProductName,
+UnitPrice
+FROM
+Products
+WHERE
+UnitPrice
+BETWEEN 35 AND 40
+
+-- Slide 14
+
+SELECT
+FirstName, 
+LastName,
+TitleFROM
+Employees
+WHERE  
+Title 
+LIKE
+'Sales%'
+
+
+
+SELECT
+FirstName, 
+LastName,
+TitleFROM
+Employees
+WHERE  
+Title 
+LIKE
+'%Sales%'
+
+
+-- Slide 15
+
+SELECT
+ProductID,
+ProductName,
+UnitsInStock + UnitsOnOrder AS FutureStock
+FROM
+Products
+WHERE
+FutureStock < 100 
+
+-- Must use the whole expression again!
+
+(UnitsInStock + UnitsOnOrder) < 100
+
+Slide 17
+
+SELECT
+CompanyName, 
+Phone,
+Fax
+FROM
+Suppliers
+WHERE
+Fax = NULL
+
+SELECT
+CompanyName, 
+Phone,
+Fax
+FROM
+Suppliers
+WHERE
+Fax IS NULL
+
+---------------------------------------------------Mod 4 Sorting Rows
+
+--Slide 7
+
+SELECT
+ProductName,
+UnitPrice
+FROM
+Products
+ORDER BY
+UnitPrice 
+DESC
+
+--Slide 9
+
+SELECT
+ProductID, 
+ProductName,
+CategoryID, 
+UnitPrice
+FROM
+Products
+ORDER BY
+CategoryID,
+UnitPrice 
+DESC
+
+--Slide 11
+
+SELECT
+ProductName, 
+UnitsInStock,
+UnitsOnOrder,
+UnitsInStock + UnitsOnOrder AS FutureStock
+FROM
+Products
+ORDER BY
+FutureStock 
+DESC
+
+-- Slide 13
+
+SELECT
+City, 
+Country
+FROM
+Customers
+
+SELECT DISTINCT
+City, 
+Country
+FROM
+Customers
+
+--Slide 15
+
+SELECT TOP 11 WITH TIES
+ProductName,
+UnitPrice
+FROM
+Products
+ORDER BY
+UnitPrice 
+DESC
+
+---------------------------------------------------M0d 5 Grouping and Aggregating data
+
+--Slide 8
+
+SELECT
+CategoryID,
+AVG(UnitPrice)
+FROM
+Products
+GROUP BY
+CategoryID
+
+
+SELECT
+CategoryID,
+AVG(UnitPrice)
+FROM
+Products
+GROUP BY
+CategoryID
+ORDER BY 2
+DESC
+
+--Slide 11
+
+SELECT
+CategoryID,
+AVG(UnitPrice)
+FROM
+Products
+GROUP BY
+CategoryID
+HAVING
+AVG(UnitPrice) > 30
+
+
+-----------------------------------------------------------------Mod 6 Using Multiple Tables
+
+--Slide 9
+
+SELECT
+Products.CategoryID,
+CategoryName,
+ProductID, 
+ProductName
+FROM
+Products
+INNER JOIN
+Categories
+ON
+Products.CategoryID = Categories.CategoryID
+
+
+
+SELECT
+P.CategoryID,
+CategoryName,
+ProductID, 
+ProductName
+FROM
+Products AS p
+INNER JOIN
+Categories AS c
+ON
+P.CategoryID = C.CategoryID
+
+
+--Slide 11
+
+SELECT
+o.OrderID,
+o.OrderDate,
+c.CompanyName
+FROM
+Customers AS c –- Left Table
+LEFT JOIN 
+Orders AS o
+ON
+c.CustomerID = o.CustomerID
+
+
+-- Slide 13
+
+--Only records from the customers table that have matching orders - not really used.
+
+SELECT
+o.OrderID,
+o.OrderDate,
+c.CompanyName
+FROM
+Customers AS c
+RIGHT JOIN 
+Orders AS o
+ON
+c.CustomerID = o.CustomerID
+
+--Slide 15
+
+SELECT 
+o.OrderID, 
+o.OrderDate,
+c.CompanyName, 
+e.FirstName, 
+e.LastName
+FROM 
+Customers AS c
+LEFT JOIN 
+Orders AS o
+ON 
+c.CustomerID = o.CustomerID
+LEFT JOIN 
+Employees AS e 
+ON 
+e.EmployeeID = o.EmployeeID
+
+-- Slide 16
+
+SELECT
+emp.FirstName, 
+emp.LastName,
+mgr.FirstName + ' ' + mgr.LastName AS Boss
+FROM
+Employees AS emp
+JOIN
+Employees AS mgr
+ON
+emp.ReportsTo = mgr.EmployeeID
+
+
+--Slide 18
+
+SELECT 
+ProductID
+FROM 
+dbo.[Order Details]
+GROUP BY 
+ProductID
+HAVING SUM(Quantity) > 700
+UNION
+SELECT	
+ProductID
+FROM 
+Products
+WHERE UnitPrice > 100
+
+--Slide 19
+
+SELECT 
+ProductID
+FROM 
+Products
+WHERE UnitPrice > 100
+EXCEPT
+SELECT	
+ProductID
+FROM dbo.[Order Details]
+GROUP BY 
+ProductID
+HAVING SUM(Quantity) > 700
+
+
+SELECT 
+p.ProductID, 
+p.UnitPrice, 
+SUM(Quantity) AS TotalSold
+FROM 
+Products AS p
+JOIN 
+dbo.[Order Details] AS od
+ON 
+p.ProductID = od.ProductID
+WHERE p.UnitPrice > 100
+GROUP BY 
+p.ProductID, p.UnitPrice
+HAVING SUM(Quantity) <= 700
+
+-- Slide 20
+
+SELECT 
+ProductID
+FROM 
+Products
+WHERE UnitPrice > 100
+INTERSECT
+SELECT	
+ProductID
+FROM dbo.[Order Details]
+GROUP BY 
+ProductID
+HAVING SUM(Quantity) > 700
+
+
+SELECT 
+p.ProductID, 
+p.UnitPrice, 
+SUM(Quantity) AS TotalSold
+FROM 
+Products AS p
+JOIN 
+dbo.[Order Details] AS od
+ON p.ProductID = od.ProductID
+WHERE p.UnitPrice > 100
+GROUP BY 
+p.ProductID, p.UnitPrice
+HAVING SUM(Quantity) > 700
+
+
+
+---------------------------------------------Mod 07 Common Functions PPt
+
+--Slide 10
+
+
+SELECT DATEDIFF(DAY, RequiredDate ,ShippedDate )as days_to_ship, RequiredDate, ShippedDate 
+from Orders
+
+SELECT ShipCountry, GETDATE() AS TodaysDate
+from  orders
+
+SELECT OrderID, DATEDIFF(day,[OrderDate], [ShippedDate]) AS 'Days to Ship'
+from  orders
+
+SELECT OrderID, DATEPART(MONTH,[OrderDate]) as Month
+from  orders
+
+SELECT ShipCountry, DATENAME(year, OrderDate) AS Year
+from  orders
+
+--Slide 12
+
+select * from [dbo].[Customers]
+
+-- can use isnull function to replace null valuses with another value
+
+SELECT CompanyName, ISNULL(Fax, 'Unknown') AS Fax
+from Customers
+
+select * from [dbo].[Customers]
+where CompanyName = 'Princesa Isabel Vinhos'
+
+SELECT CompanyName, Region, ContactName FROM Customers
+order by Region desc
+
+SELECT CompanyName, NullIf(Region, 'WY'), ContactName FROM Customers
+
+-- Use coalesce to find multiple columns that have null values.(returns first non null or null if both null)
+
+SELECT Coalesce(Region, Fax), CompanyName
+from Customers;
+
+
+--Slide 14
+
+select GETDATE()  AS Date 
+select CAST(GETDATE()  AS Date) 
+
+Select * from Orders
+
+select CONVERT(varchar(20), OrderDate, 103) AS UK_Date from Orders -- UK Date format
+
+select CONVERT(varchar(20), OrderDate, 106) AS UK_Date from Orders -- dd MON yy format
+
+select cast(Freight AS int) AS 'Money' from Orders -- Changes the data type of a column
+
+
+SELECT CAST(10.6 AS INT)
+
+SELECT ROUND(10.6, 0) 
+
+select Freight from Orders
+
+SELECT ROUND(Freight, 0) from Orders
+
+----------------------------------------------Mod 08 Views and Stored Procedures PPt
+
+--Slide 12
+
+CREATE PROCEDURE SelectAllCustomers @City nvarchar(15)
+AS
+SELECT * FROM Customers WHERE City = @City
+
+GO
+
+EXEC SelectAllCustomers @city = 'London'
+
+EXEC SelectAllCustomers 'London'
+
+
+--Using multiple parameters
+
+CREATE PROCEDURE SelectAllCustomers @Country nvarchar(15), @ContactTitle nvarchar(30)
+AS
+SELECT * FROM Customers WHERE Country = @Country AND ContactTitle = @ContactTitle
+GO
+
+EXEC SelectAllCustomers 'USA', 'Owner'
+
+--or
+
+CREATE PROCEDURE SelectAllCustomers @City nvarchar(15)
+AS
+SELECT * FROM Customers 
+
+WHERE City IN (SELECT * FROM string_split(@City,','))
+
+GO
+
+EXEC SelectAllCustomers 'London,Paris'
+go
+
+
+
+-------------------------------------------------  Mod 09 - Table Expressions (Day 2)
+
+--slide 5
+
+USE Northwind
+GO
+
+CREATE VIEW PricesReview AS
+SELECT 
+p.ProductID, 
+p.UnitPrice, 
+SUM(Quantity) AS TotalSold
+FROM 
+Products AS p
+JOIN 
+dbo.[Order Details] AS od
+ON 
+p.ProductID = od.ProductID
+WHERE p.UnitPrice > 100
+GROUP BY 
+p.ProductID, p.UnitPrice
+HAVING SUM(Quantity) <= 700
+GO
+
+SELECT * FROM PricesReview
+GO
+
+DROP VIEW PricesReview
+GO
+
+
+
+
+--slide 9
+
+CREATE FUNCTION dbo.GetProductsByColour(@Colour varchar(20))
+	RETURNS TABLE AS
+	RETURN(
+		SELECT PSC.Name AS Subcategory, P.Name
+			FROM Production.Product AS P
+				INNER JOIN Production.ProductSubcategory AS PSC
+					ON P.ProductSubcategoryID = PSC.ProductSubcategoryID
+			WHERE Color = @Colour
+	)
+GO
+
+SELECT * FROM dbo.GetProductsByColour('Red')
+GO
+
+DROP FUNCTION dbo.GetProductsByColour
+GO
+
+-- slide 15
+
+
+SELECT *
+	FROM (
+		SELECT ProductSubcategoryID, avg(ListPrice) AS AvgPrice
+			FROM Production.Product
+			GROUP BY ProductSubCategoryID 
+	) AS Derivedtable
+GO
+
+SELECT *
+	FROM (
+		SELECT ProductSubcategoryID, avg(ListPrice)
+			FROM Production.Product
+			GROUP BY ProductSubCategoryID 
+	) AS Derivedtable (SubcategoryID, AvgPrice)
+GO
+
+
+
+-- Example 2 if required
+
+SELECT P.ProductID, P.Name, P.ListPrice, DT.AvgPrice
+	FROM Production.Product AS P
+	INNER JOIN 
+	(
+		SELECT ProductSubcategoryID, avg(ListPrice) AS AvgPrice
+			FROM Production.Product
+			GROUP BY ProductSubcategoryID 
+	) AS DT
+	ON P.ProductSubcategoryID = DT.ProductSubcategoryID
+	WHERE P.ListPrice >= DT.AvgPrice
+GO
+
+
+
+--Slide 19
+
+CREATE TABLE #Averages(
+	SubcategoryID int,
+	AverageListPrice money
+)
+GO
+
+INSERT INTO #Averages
+	SELECT ProductSubcategoryID, avg(ListPrice) AS AvgPrice
+			FROM Production.Product
+			GROUP BY ProductSubcategoryID 
+GO
+
+SELECT *
+	FROM #Averages
+GO
+
+DROP TABLE #Averages
+
+-- Slide 32
+
+DECLARE @Averages TABLE (
+	SubcategoryID int,
+	AverageListPrice money
+)
+
+INSERT INTO @Averages
+	SELECT ProductSubcategoryID, avg(ListPrice) AS AvgPrice
+			FROM Production.Product
+			GROUP BY ProductSubcategoryID 
+
+SELECT * FROM @Averages
+GO
+
+SELECT * FROM @Averages – an error occurs as the variable was dropped at the previous GO statement
+
+
+
+
+
+
+
+
+------------------------------------------------- Mod 10 - Advanced Grouping
+
+
+-- slide 4
+CREATE TABLE dbo.SalesSource(
+	Category VARCHAR(20),
+	Subcategory VARCHAR(20),
+	Quarter char(2),
+	Sales int
+)
+INSERT INTO dbo.SalesSource VALUES
+	('Accessories','Tyres','Q1',230),('Accessories','Tyres','Q2',250),
+	('Accessories','Tyres','Q3',275),
+	('Accessories','Lights','Q1',1000),('Accessories','Lights','Q2',1200),
+	('Bikes','Road Bikes','Q1',90),('Bikes','Road Bikes','Q2',82),
+	('Bikes','Mountain Bikes','Q1',120),('Bikes','Mountain Bikes','Q2',124),
+	('Bikes','Touring Bikes','Q1',102),('Bikes','Touring Bikes','Q2',99)
+SELECT * FROM dbo.SalesSource
+
+
+-- Slide 4
+SELECT Category, Quarter, SUM(Sales) AS TotalSales
+	FROM SalesSource
+	GROUP BY Category, Quarter
+		WITH ROLLUP 
+
+-- Slide 6
+SELECT Category, Quarter, SUM(Sales) AS Sales
+	FROM SalesSource
+	GROUP BY Category, Quarter
+		WITH CUBE
+
+
+
+-------------------------------------------------  Programming TSQL Demo if Time
+
+-- Slide 3 text
+
+--Batch 1
+	PRINT '1'
+	GO
+--Batch 2
+DECLARE @X INT = 5
+	PRINT '2'
+	PRINT @X
+	PRINT '3'
+	GO
+--Batch 3
+	PRINT '4'
+	GO
+GO
+
+-- Slide 4
+-- print 50
+
+DECLARE @MyVar INT = 5
+PRINT @MyVar * 10
+GO
+
+-- print Reset value five times
+DECLARE @MyVar VARCHAR(40) = 'Reset value'
+PRINT @MyVar
+GO 5
+GO
+
+
+-- Slide 5
+
+CREATE VIEW dbo.SalesCategorySummary AS
+	SELECT Category, Quarter, SUM(Sales) AS TotalSales
+		FROM SalesSource
+		GROUP BY Category, Quarter
+			WITH CUBE
+
+
+
+-------------------------------------------------  Mod 07 - Transactions
+USE QATSQLPLUS
+GO
+-- drop table dbo.CurrentAccount
+CREATE TABLE dbo.CurrentAccount(
+	AcctNo INT PRIMARY KEY,
+	Balance MONEY CHECK (Balance >= 0)
+)
+
+INSERT INTO dbo.CurrentAccount VALUES (12343422,45) -- customer 12343422 has £45 in bank
+GO
+
+CREATE TABLE dbo.CashPointTrans(
+	AcctNo INT,
+	TranDT DATETIME,
+	MachineID INT,
+	TranValue MONEY
+)
+
+SELECT * FROM dbo.CashPointTrans
+SELECT * FROM dbo.CurrentAccount
+GO
+
+DECLARE @AccountNo INT = 12343422
+DECLARE @Machine INT = 23321
+DECLARE @Amount MONEY = 50.00
+BEGIN TRY
+	BEGIN TRAN
+		INSERT INTO dbo.CashpointTrans(AcctNo, TranDT, MachineID, TranValue)
+			VALUES (@AccountNo,getdate(),@Machine, @Amount)
+		UPDATE dbo.CurrentAccount
+			SET Balance = Balance - @Amount
+			WHERE AcctNo = @AccountNo
+	COMMIT TRAN
+END TRY
+BEGIN CATCH
+	Print 'Error was caught';
+	THROW
+END CATCH
