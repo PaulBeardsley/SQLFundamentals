@@ -1,13 +1,20 @@
+CREATE DATABASE House
+GO
+
+USE HOUSE
+
 CREATE TABLE suppliers(
 	SupplierID varchar(4),
 	SupplierName varchar(20)
 )
+GO
 
 CREATE TABLE orders(
 	OrderID int,
 	SupplierID varchar(4),
 	OrderDate int
 )
+GO
 
 INSERT INTO suppliers(SupplierID, SupplierName)
 VALUES
